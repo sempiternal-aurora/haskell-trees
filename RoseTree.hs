@@ -22,3 +22,7 @@ instance Applicative RoseTree where
     pure x = Rose x []
 
     (<*>) (Rose f frs) (Rose r rs) = Rose (f r) (fmap (fmap f) rs ++ zipWith (<*>) frs rs)
+
+instance Monad RoseTree where
+    (>>=) (Rose r rs) f = Rose r' (rs' ++ map (>>=f) rs)
+        where Rose r' rs' = f r
