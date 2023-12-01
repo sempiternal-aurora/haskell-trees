@@ -17,3 +17,10 @@ instance Traversable BinaryTree where
 
     traverse f (Node l x r) = Node <$> traverse f l <*> f x <*> traverse f r
     traverse _ Null         = pure Null
+
+instance Applicative BinaryTree where
+    pure x = Node (pure x) x (pure x)
+
+    (<*>) (Node l f r) (Node l' x r') = Node (l <*> l') (f x) (r <*> r')
+    (<*>) Null         _              = Null
+    (<*>) _            Null           = Null
