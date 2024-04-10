@@ -15,3 +15,10 @@ instance Traversable RoseTree where
     sequenceA (Rose r rs) = Rose <$> r <*> traverse sequenceA rs
 
     traverse f (Rose r rs)  = Rose <$> f r <*> traverse (traverse f) rs
+
+instance Applicative RoseTree where
+    -- | Unlike the zip instance used for binary trees, we can be monadic and apply each function to create a rose tree
+    --   and then collapse it down into a single RoseTree
+    pure x = Rose x []
+
+    (<*>) (Rose f frs) (Rose r rs) = Rose (f r) (fmap (fmap f) rs ++ zipWith (<*>) frs rs)
