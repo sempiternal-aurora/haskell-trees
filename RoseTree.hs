@@ -5,3 +5,7 @@ data RoseTree t = Rose t [RoseTree t]
 
 instance Functor RoseTree where
     fmap f (Rose r rs) = Rose (f r) (map (fmap f) rs)
+
+instance Foldable RoseTree where
+    -- | Use the list foldable instance to fold over the children of the RoseTree
+    foldr f z (Rose r rs) = r `f` foldr (flip (foldr f)) z rs
